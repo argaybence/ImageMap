@@ -4,7 +4,6 @@ def two_point_equation(xy1: tuple, xy2: tuple, y):
     # (x2-x1)(y-y1) = (y2-y1)(x-x1)
 
     # ((x2-x1)*(y-y1) + (-(y2-y1) * (-x1))) / (y2 - y1)
-
     return round(((x2 - x1) * (y - y1) + (-(y2 - y1) * (-x1))) / (y2 - y1))
 
 
