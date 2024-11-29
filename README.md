@@ -1,6 +1,6 @@
 # ImageMap for Python GUI applications
 
-ImageMapTkinter is a Python library that enables you to create interactive image maps using the Tkinter GUI framework. It provides support for detecting clicks on various shapes (triangles, rectangles, and circles) overlayed on an image.
+ImageMap is a Python library that enables you to create interactive image maps using the Python GUI frameworks. It provides support for detecting clicks on various shapes (triangles, rectangles, and circles) overlayed on an image. In this documentation, we will use Tkinter for examples. However, you can apply this to any Python GUI framework, as it only requires the click event arguments and the window size, which are universal across GUI libraries.
 
 ## Features
 
@@ -9,7 +9,7 @@ ImageMapTkinter is a Python library that enables you to create interactive image
 - Supports Tkinter’s GUI framework for Python.
 - Allows custom actions to be triggered when a shape is clicked.
 
-## Requirements
+## Requirements for the examples
 
 - Python 3.6+
 - `tkinter` (built-in with Python)
@@ -18,6 +18,12 @@ ImageMapTkinter is a Python library that enables you to create interactive image
 Install Pillow with:
 ```bash
 pip install pillow
+```
+or
+
+Install requirements.txt:
+```bash
+pip install -r requirements.txt
 ```
 
 ## Usage
