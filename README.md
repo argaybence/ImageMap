@@ -1,25 +1,161 @@
-# ImageMapTkinter
-This library allows people to imagemap their pictures, while using Tkinter.
+# ImageMap for Python GUI applications
 
-USAGE: Only works if the image you are mapping, is setted as the background of the window,
-moreover the screen width, and height need to be equivalent to the image width, and height.
-Since this library doesn't work with the natural Tkinter coordinates,
+ImageMapTkinter is a Python library that enables you to create interactive image maps using the Tkinter GUI framework. It provides support for detecting clicks on various shapes (triangles, rectangles, and circles) overlayed on an image.
 
-I would suggest you to use show_coordinates() method, which will print the coordinates in the console.
-Those coordinates needs to be provided as the shape coordinate's.
+## Features
 
-Example of calling the show_coordinates() method: show_coordinates((WIDTH, HEIGHT), x, y)
-If you have all the peaks coordinates, then you have to place it in a list like this: [(x1,y1),(x2,y2),(xn,yn)]. This list will provide the coordinates for the coords parameter.
+- Easily map user clicks to specific shapes (triangles, rectangles, circles).
+- Detect clicks within specific regions of an image.
+- Supports Tkinter’s GUI framework for Python.
+- Allows custom actions to be triggered when a shape is clicked.
 
-First of all you need to create an object of ImageMapping class. Example of creating an object for a triangle: ImageMapping(geometry, event.x, event.y, tri_coordinates, triangle_click).triangle()
-First parameter is the window Height, and Width. Next parameter is the peaks coordinate of the shape. Event.x, and event.y stands for the coordinate where the user clicked.
-The last one is the method, which gets invited whenever they clicked on the area of the shape. Then after you filled everything, you need to call a method which represents your shape. Rightnow there are only 3 shapes available (circle, trinagle, rectangle/square), however with the help of this shapes you can create whatever shape you want to. 
+## Requirements
 
-Circle mapping is an exception from the others, because when you provide the coordinates, you only have to provide one.
-You need to give a coordinate which is on the edge of the circle, and when you invite the circle(radius) method, you need to add the radius of the circle.
-(May I will make a radius calculator in the close future to make usage more easy)
+- Python 3.6+
+- `tkinter` (built-in with Python)
+- `Pillow` (for handling images)
+
+Install Pillow with:
+```bash
+pip install pillow
+```
+
+## Usage
+
+### Prerequisites
+
+The image you are mapping must:
+- Be set as the background of the Tkinter window.
+- Match the dimensions of the window (i.e., screen width and height should equal the image width and height).
+
+### Defining Shapes
+
+You can define shapes by their coordinates and associate them with specific actions:
+
+1. **Triangles**:
+   - Provide a list of 3 points (tuples) representing the vertices.
+   - Example: `tri_coordinates = [(x1, y1), (x2, y2), (x3, y3)]`.
+
+2. **Rectangles/Squares**:
+   - Provide 4 corner points as a list of tuples.
+   - Example: `rect_coordinates = [(x1, y1), (x2, y2), ..., (x4, y4)]`.
+
+3. **Circles**:
+   - Provide a single point (center) and a radius.
+   - Example: `circle_coordinate = [(x, y)]`.
+
+### Optional Helper Method
+Use `show_coordinates()` to debug and print the coordinates clicked by the user. This helps in obtaining the required points for defining shapes.
+Example with Tkinter:
+
+```python
+from ImageMap import ImageMap
+from tkinter import Tk
+
+WIDTH, HEIGHT = 1020, 510
+geometry = (WIDTH, HEIGHT)
+    
+win = Tk()
+win.geometry(f"{WIDTH}x{HEIGHT}")
+
+im = ImageMap(geometry)
+
+win.bind("<Button-1>", im.show_coordinates)
+
+```
+
+### Example Code
+
+Here’s an example of how to use ImageMap with Tkinter with to set up an interactive image map:
+
+```python
+from tkinter import Tk, Label
+from ImageMap import ImageMap
+from PIL import ImageTk, Image
+
+# Image and window dimensions
+WIDTH, HEIGHT = 1020, 510
+
+# Define shape coordinates
+rect_coordinates = [(-448, 161), (-448, 25), (-197, 25), (-197, 161)]
+tri_coordinates = [(170, 3), (402, 3), (287, 179)]
+circle_coordinate = [(-35, 90)]
+
+geometry = (WIDTH, HEIGHT)
+
+# Initialize ImageMap
+im = ImageMap(geometry)
 
 
-If you have any questions, my Discord: abence#0716, Email: argaybence.161@gmail.com.
+# Define actions for shapes
+@im.triangle(edges=tri_coordinates)
+def tri_action(event):
+   print('Clicked on a triangle.')
 
 
+@im.rectangle(edges=rect_coordinates)
+def rect_action(event):
+   print('Clicked on a rectangle.')
+
+
+@im.circle(edges=circle_coordinate, radius=116)
+def circle_action(event):
+   print('Clicked on a circle.')
+
+
+# Combine actions (if needed)
+def combined(event):
+   rect_action(event)
+   tri_action(event)
+   circle_action(event)
+
+
+# Main application setup
+def main():
+   win = Tk()
+   win.geometry(f"{WIDTH}x{HEIGHT}")
+
+   # Load and set the background image
+   image = Image.open("Assets/shapes2.png")
+   bg_image = ImageTk.PhotoImage(image)
+
+   frame = Label(win, image=bg_image)
+   frame.place(x=0, y=0)
+
+   # Bind click event
+   win.bind("<Button-1>", combined)
+
+   win.mainloop()
+
+
+if __name__ == '__main__':
+   main()
+```
+
+## Explanation of the Code
+
+1. **Defining Shape Coordinates**:
+   Coordinates for shapes are defined as lists of tuples. For example, a triangle needs 3 points.
+
+2. **Binding Actions**:
+   Each shape is associated with a function using decorators like `@im.triangle`, `@im.rectangle`, or `@im.circle`.
+
+3. **Combining Actions**:
+   If multiple shapes overlap, you can define a `combined` function to handle multiple shape clicks. 
+   (You can also use them separately, we just combined them for shorter explanation)
+   However if you want to bind one type of event to one element multiple times, combining these functions like in the example can be a solution!
+
+4. **Setting Up the GUI**:
+   The background image is loaded using Pillow and placed in the Tkinter window. The `<Button-1>` event binds mouse clicks to your defined actions.
+
+## Notes
+
+1. For circles, you only need to provide a single edge coordinate(middle point), and then specify the radius in the `@im.circle(edges=..., radius=...)` method.
+
+2. This library uses custom coordinate handling, so make sure the dimensions of the image and window match.
+
+## Contact
+
+If you have any questions or need assistance, feel free to reach out:
+
+- Email: `argaybence.161@gmail.com`
